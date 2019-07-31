@@ -69,11 +69,26 @@ class Game extends React.Component {
                 squares: Array(9).fill(null),
             }],
             xIsNext: true,
+            date: new Date(),
             stepNumber: 0
         }
     }
 
-    handleClick(i) {
+    componentDidMount() {
+        this.timeID = setInterval(this.tick,1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timeID);
+    }
+
+    tick = () => {
+        this.setState({
+            date: new Date()
+        });
+    }
+
+    handleClick = (i) => {
         const history = this.state.history.slice(0,this.state.stepNumber+1);
         const current = history[history.length-1];
         const squares = current.squares.slice();
@@ -112,9 +127,14 @@ class Game extends React.Component {
             status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
         }
         return (
+
             <div className="game">
+                <div>
+                    <h1>Hello, world!</h1>
+                    <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+                </div>
                 <div className="game-board">
-                    <Board squares={current.squares} onClick={(i) => this.handleClick(i)} />
+                    <Board squares={current.squares} onClick={this.handleClick} />
                 </div>
                 <div className="game-info">
                     <div>{status}</div>
